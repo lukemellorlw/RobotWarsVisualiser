@@ -11,34 +11,33 @@ import {
   CheatingRobot
 } from './robots';
 
+// Robot configuration - add new robots here
+const ROBOT_CONFIGS = [
+  { Class: BullyRobot, name: 'Bully Robot', color: '#ef4444' },
+  { Class: CheatingRobot, name: 'Cheating Robot', color: '#8b5cf6' },
+  { Class: CompassionateRobot, name: 'Compassionate Robot', color: '#06b6d4' },
+  { Class: LazyRobot, name: 'Lazy Robot', color: '#f59e0b' },
+  { Class: Luke, name: 'Luke', color: '#10b981' },
+  { Class: StupidRobot, name: 'Stupid Robot', color: '#ec4899' },
+  { Class: VeryStupidRobot, name: 'Very Stupid Robot', color: '#6366f1' }
+];
+
 function App() {
   const [mediator, setMediator] = useState(null);
   const [robots, setRobots] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
   const [speed, setSpeed] = useState(500);
   const [battleNumber, setBattleNumber] = useState(0);
-  const [stats, setStats] = useState({
-    'Bully Robot': 0,
-    'Cheating Robot': 0,
-    'Compassionate Robot': 0,
-    'Lazy Robot': 0,
-    'Luke': 0,
-    'Stupid Robot': 0,
-    'Very Stupid Robot': 0
-  });
+  const [stats, setStats] = useState(
+    ROBOT_CONFIGS.reduce((acc, { name }) => ({ ...acc, [name]: 0 }), {})
+  );
   const [totalBattles, setTotalBattles] = useState(0);
   const intervalRef = useRef(null);
 
   const initializeBattle = () => {
-    const newMediator = new Mediator([
-      new BullyRobot(),
-      new CheatingRobot(),
-      new CompassionateRobot(),
-      new LazyRobot(),
-      new Luke(),
-      new StupidRobot(),
-      new VeryStupidRobot()
-    ]);
+    const newMediator = new Mediator(
+      ROBOT_CONFIGS.map(({ Class }) => new Class())
+    );
     setMediator(newMediator);
     setRobots([...newMediator.robots]);
   };
@@ -98,30 +97,18 @@ function App() {
   };
 
   const resetStats = () => {
-    setStats({
-      'Bully Robot': 0,
-      'Cheating Robot': 0,
-      'Compassionate Robot': 0,
-      'Lazy Robot': 0,
-      'Luke': 0,
-      'Stupid Robot': 0,
-      'Very Stupid Robot': 0
-    });
+    setStats(
+      ROBOT_CONFIGS.reduce((acc, { name }) => ({ ...acc, [name]: 0 }), {})
+    );
     setTotalBattles(0);
   };
 
   const runMultipleBattles = async (count) => {
     setIsRunning(false);
     for (let i = 0; i < count; i++) {
-      const testMediator = new Mediator([
-        new BullyRobot(),
-        new CheatingRobot(),
-        new CompassionateRobot(),
-        new LazyRobot(),
-        new Luke(),
-        new StupidRobot(),
-        new VeryStupidRobot()
-      ]);
+      const testMediator = new Mediator(
+        ROBOT_CONFIGS.map(({ Class }) => new Class())
+      );
 
       while (testMediator.getAliveCount() > 1) {
         testMediator.nextTurn();
@@ -154,16 +141,8 @@ function App() {
   };
 
   const getRobotColor = (name) => {
-    const colors = {
-      'Bully Robot': '#ef4444',
-      'Cheating Robot': '#8b5cf6',
-      'Compassionate Robot': '#06b6d4',
-      'Lazy Robot': '#f59e0b',
-      'Luke': '#10b981',
-      'Stupid Robot': '#ec4899',
-      'Very Stupid Robot': '#6366f1'
-    };
-    return colors[name] || '#6b7280';
+    const config = ROBOT_CONFIGS.find(c => c.name === name);
+    return config ? config.color : '#6b7280';
   };
 
   return (
