@@ -100,4 +100,4 @@ The project uses Vite for fast development and building. Hot Module Replacement 
 
 ## License
 
-This project is private and not licensed for public use.
+MIT License - feel free to use this project for learning and experimentation.
