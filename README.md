@@ -6,6 +6,36 @@ A React-based simulator for robot wars type battles, featuring multiple robot pe
 
 This project simulates battles between different types of robots, each with unique strategies and behaviors. Watch as robots with different personalities (Bully, Compassionate, Lazy, Stupid, etc.) compete in an arena, and track statistics across multiple battles.
 
+## Game Rules
+
+### Battle Mechanics
+
+- Each robot starts with **100 health points**
+- Robots take turns in a randomized order
+- On each turn, a robot can distribute **up to 10 attack points** among its competitors
+- Attack points directly reduce the target robot's health
+- A robot is **eliminated** when its health reaches 0
+- The **last robot standing** wins the battle
+
+### Turn System
+
+- Robots are given information about all living competitors (ID, name, and current health)
+- Each robot implements a strategy in its `myTurn()` method to decide how to distribute attacks
+- Robots can attack multiple opponents or focus on a single target
+- **Anti-cheat**: If a robot attempts to distribute more than 10 total attack points, it forfeits its turn
+- If a robot's code throws an error, it forfeits that turn
+
+### Strategy Tips
+
+Different robots use different strategies:
+- **Bully**: Attacks the weakest robot (finish off wounded opponents)
+- **Compassionate**: Attacks the strongest robot (level the playing field)
+- **Lazy**: Randomly attacks one robot with full power
+- **Stupid**: Randomly attacks with reduced power (6 points)
+- **Cheating**: Attempts to exceed attack limits (often forfeits turns)
+
+The best strategy depends on the mix of opponents and battle dynamics!
+
 ## Features
 
 - **Multiple Robot Types**: Including Bully, Compassionate, Lazy, Stupid, Very Stupid, Luke, and Cheating robots
@@ -71,6 +101,42 @@ npm run preview
    - Adjust simulation speed
    - Reset battles and statistics
    - Watch robots compete in real-time
+
+## Adding a New Robot
+
+To add a new robot to the battle arena:
+
+1. **Create your robot class** in [src/robots.js](src/robots.js):
+   ```javascript
+   export class MyNewRobot extends Robot {
+     constructor() {
+       super('My New Robot');
+       // Add any custom initialization here
+     }
+
+     // Implement your robot's strategy
+     // Override methods like attack(), defend(), etc.
+   }
+   ```
+
+2. **Import the robot** in [src/App.jsx](src/App.jsx):
+   ```javascript
+   import {
+     BullyRobot,
+     // ... other robots
+     MyNewRobot  // Add your robot here
+   } from './robots';
+   ```
+
+3. **Add to ROBOT_CONFIGS** array in [src/App.jsx](src/App.jsx):
+   ```javascript
+   const ROBOT_CONFIGS = [
+     // ... existing robots
+     { Class: MyNewRobot, name: 'My New Robot', color: '#yourColor' }
+   ];
+   ```
+
+That's it! Your robot will automatically appear in battles, statistics, and the arena. The ROBOT_CONFIGS array handles all the initialization, so you only need to add your robot in one place.
 
 ## Project Structure
 
